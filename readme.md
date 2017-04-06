@@ -10,8 +10,10 @@ Primary target:
 output is a csv file:
 `name : value`
 
-```Bitcoin (BTC),$1150.53
+```
+Bitcoin (BTC),$1150.53
 
-Ethereum Classic (ETC),$2.79```
+Ethereum Classic (ETC),$2.79
+```
 
 #### this script behavior is very straightforward so the modern sites would probably ban you for such a parsing 
