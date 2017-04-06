@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 
 from datetime import datetime
 
+from multiprocessing import Pool
+
+
 def get_html(url):
 	response = requests.get(url)
 	return response.text
@@ -18,7 +21,7 @@ def get_all_links(html):
 
 	for td in table_data_list:
 		a = td.find('a').get('href') 													# string type
-		link = 'https://coinmarketcap.com{0}'.format(a)			# /currencies/bitcoin/
+		link = 'https://coinmarketcap.com{0}'.format(a)				# /currencies/bitcoin/
 		links.append(link)
 
 	return links 
@@ -50,22 +53,25 @@ def write_csv(data):
 											data['price']) )
 		print(data['name'], 'parsed')
 
-
+def make_all(url):
+	 	html = get_html(url)
+	 	data = get_page_data(html)
+	 	write_csv(data)
 
 def main():
 	
 	#---------------------
 	start = datetime.now()
 	#---------------------
+	
+	processes_amount = 40		
+
 	url = 'https://coinmarketcap.com/all/views/all'
 
 	all_links = get_all_links( get_html(url) )
 
-	for index, url in enumerate(all_links):
-		html = get_html(url)
-		data = get_page_data(html)
-		write_csv(data)
-		print(index)
+	with Pool(processes_amount) as p:
+		p.map(make_all, all_links)
 
 	#---------------------
 	end = datetime.now()
